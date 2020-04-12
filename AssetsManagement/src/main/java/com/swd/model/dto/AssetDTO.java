@@ -1,13 +1,20 @@
 package com.swd.model.dto;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class AssetDTO extends BaseDTO {
+    @NotNull
     private String name;
+    @NotNull
     private String description;
+    @NotNull
     private double price;
+    @NotNull
     private Date purchaseDate;
+    @NotNull
     private Date expiryWarrantyDate;
+    @NotNull
     private Date nextWarrantyDate;
     private TypeDTO type;
     private StatusDTO status;

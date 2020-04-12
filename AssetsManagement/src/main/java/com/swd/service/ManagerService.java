@@ -11,4 +11,6 @@ public interface ManagerService extends BasicService<ManagerDTO> {
                                        List<String> fields,
                                        String searchBy,
                                        String searchValue);
+
+    void updateManagerStore(Long managerId, Long storeId);
 }

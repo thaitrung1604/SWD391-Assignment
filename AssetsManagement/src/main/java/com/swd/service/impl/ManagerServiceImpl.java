@@ -6,7 +6,9 @@ import com.swd.exception.ResourceNotFoundException;
 import com.swd.model.dto.ManagerDTO;
 import com.swd.model.entity.Account;
 import com.swd.model.entity.Manager;
+import com.swd.model.entity.Store;
 import com.swd.repository.ManagerRepository;
+import com.swd.repository.StoreRepository;
 import com.swd.service.HelperService;
 import com.swd.service.ManagerService;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -22,12 +24,15 @@ import java.util.Optional;
 
 @Service
 public class ManagerServiceImpl implements ManagerService, HelperService<Manager, ManagerDTO> {
-    private static final String RESOURCE_NOT_FOUND = "Can't find Manager with id: %s ";
+    private static final String MANAGER_NOT_FOUND = "Can't find Manager with id: %s ";
+    private static final String STORE_NOT_FOUND = "Can't find Store with id %s";
     private final ManagerRepository managerRepository;
+    private final StoreRepository storeRepository;
     private final ObjectMapper objectMapper;
 
-    public ManagerServiceImpl(ManagerRepository managerRepository, ObjectMapper objectMapper) {
+    public ManagerServiceImpl(ManagerRepository managerRepository, StoreRepository storeRepository, ObjectMapper objectMapper) {
         this.managerRepository = managerRepository;
+        this.storeRepository = storeRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -47,7 +52,7 @@ public class ManagerServiceImpl implements ManagerService, HelperService<Manager
             return convertEntityToFilteredDTO(optionalManager.get(), fields);
         }
         return optionalManager.map(this::convertEntityToDTO).orElseThrow(() ->
-                new ResourceNotFoundException(String.format(RESOURCE_NOT_FOUND, id)));
+                new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, id)));
     }
 
     @Override
@@ -94,11 +99,26 @@ public class ManagerServiceImpl implements ManagerService, HelperService<Manager
     }
 
     @Override
+    public void updateManagerStore(Long managerId, Long storeId) {
+        Optional<Manager> optionalManager = managerRepository.findById(managerId);
+        if (!optionalManager.isPresent()) {
+            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, managerId));
+        }
+        Optional<Store> optionalStore = storeRepository.findById(storeId);
+        if (!optionalStore.isPresent()) {
+            throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, managerId));
+        }
+        Manager manager = optionalManager.get();
+        manager.setStore(optionalStore.get());
+        managerRepository.save(manager);
+    }
+
+    @Override
     public ManagerDTO update(long id, ManagerDTO managerDTO) {
         Optional<Manager> optionalManager = managerRepository.findById(id);
         return optionalManager.map(manager ->
                 convertEntityToDTO(managerRepository.save(updateFields(manager, managerDTO))))
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(RESOURCE_NOT_FOUND, id)));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, id)));
     }
 
     @Override
@@ -107,7 +127,7 @@ public class ManagerServiceImpl implements ManagerService, HelperService<Manager
         if (optionalManager.isPresent()) {
             managerRepository.delete(optionalManager.get());
         } else {
-            throw new ResourceNotFoundException(String.format(RESOURCE_NOT_FOUND, id));
+            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, id));
         }
     }
 

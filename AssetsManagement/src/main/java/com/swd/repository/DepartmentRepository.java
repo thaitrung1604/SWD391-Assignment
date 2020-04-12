@@ -15,4 +15,10 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
     Page<Department> findByEmailContaining(String searchValue, Pageable pageable);
 
     Page<Department> findByPhoneContaining(String searchValue, Pageable pageable);
+
+    boolean existsByName(String name);
+
+    boolean existsByPhone(String phone);
+
+    boolean existsByEmail(String email);
 }

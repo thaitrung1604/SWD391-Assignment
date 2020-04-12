@@ -2,6 +2,7 @@ package com.swd.handler;
 
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
+import com.swd.exception.UniqueConstraintException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpHeaders;
@@ -56,6 +57,11 @@ public class WebRestControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotSupportedException.class)
     public ResponseEntity<Object> handleNotSupportedException(NotSupportedException ex) {
+        return createResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(UniqueConstraintException.class)
+    public ResponseEntity<Object> handleUniqueConstraintException(UniqueConstraintException ex) {
         return createResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

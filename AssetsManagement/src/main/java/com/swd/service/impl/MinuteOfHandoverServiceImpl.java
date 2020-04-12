@@ -20,9 +20,9 @@ import java.util.Optional;
 
 @Service
 public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
-    private static final String ASSET_NOT_FOUND = "Can't find asset with code %s";
-    private static final String MANAGER_NOT_FOUND = "Can't find manager with code %s";
-    private static final String STORE_NOT_FOUND = "Manager with code %s doesn't have a store. Please assign him/her first";
+    private static final String ASSET_NOT_FOUND = "Can't find asset with id %s";
+    private static final String MANAGER_NOT_FOUND = "Can't find manager with id %s";
+    private static final String STORE_NOT_FOUND = "Manager with id %s doesn't have a store. Please assign him/her first";
     private static final String MINUTE_OF_HANDOVER_NOT_FOUND = "Minute of handover with id %s not found";
     private final MinuteOfHandoverRepository minuteOfHandoverRepository;
     private final ManagerRepository managerRepository;

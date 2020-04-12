@@ -3,6 +3,7 @@ package com.swd.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
+import com.swd.exception.UniqueConstraintException;
 import com.swd.model.dto.DepartmentDTO;
 import com.swd.model.entity.Department;
 import com.swd.repository.DepartmentRepository;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Service
 public class DepartmentServiceImpl implements DepartmentService, HelperService<Department, DepartmentDTO> {
     private static final String RESOURCE_NOT_FOUND = "Can't find Department with id: %s ";
+    private static final String UNIQUE_CONSTRAINT = "%s is already taken";
 
     private final DepartmentRepository departmentRepository;
     private final ObjectMapper objectMapper;
@@ -33,6 +35,18 @@ public class DepartmentServiceImpl implements DepartmentService, HelperService<D
 
     @Override
     public DepartmentDTO add(DepartmentDTO departmentDTO) {
+        boolean checkName = departmentRepository.existsByName(departmentDTO.getName());
+        if (checkName){
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT,departmentDTO.getName()));
+        }
+        boolean checkPhone = departmentRepository.existsByPhone(departmentDTO.getPhone());
+        if (checkPhone){
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT,departmentDTO.getPhone()));
+        }
+        boolean checkEmail = departmentRepository.existsByEmail(departmentDTO.getEmail());
+        if (checkEmail){
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT,departmentDTO.getEmail()));
+        }
         return convertEntityToDTO(departmentRepository.save(convertDTOToEntity(departmentDTO)));
     }
 
