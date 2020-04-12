@@ -13,4 +13,10 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     Page<Supplier> findByEmailContaining(String searchValue, Pageable pageable);
 
     Page<Supplier> findByPhoneContaining(String searchValue, Pageable pageable);
+
+    boolean existsByName(String name);
+
+    boolean existsByPhone(String phone);
+
+    boolean existsByEmail(String email);
 }

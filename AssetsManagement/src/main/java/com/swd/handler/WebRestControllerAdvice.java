@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,6 +63,11 @@ public class WebRestControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UniqueConstraintException.class)
     public ResponseEntity<Object> handleUniqueConstraintException(UniqueConstraintException ex) {
+        return createResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<Object> handleParseException(ParseException ex) {
         return createResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

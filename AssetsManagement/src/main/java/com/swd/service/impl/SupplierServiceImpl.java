@@ -3,6 +3,7 @@ package com.swd.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
+import com.swd.exception.UniqueConstraintException;
 import com.swd.model.dto.SupplierDTO;
 import com.swd.model.entity.Supplier;
 import com.swd.repository.SupplierRepository;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @Service
 public class SupplierServiceImpl implements SupplierService, HelperService<Supplier, SupplierDTO> {
     private static final String RESOURCE_NOT_FOUND = "Can't find Supplier with id: %s ";
-
+    private static final String UNIQUE_CONSTRAINT = "%s is already taken";
     private final SupplierRepository supplierRepository;
     private final ObjectMapper objectMapper;
 
@@ -33,6 +34,18 @@ public class SupplierServiceImpl implements SupplierService, HelperService<Suppl
 
     @Override
     public SupplierDTO add(SupplierDTO supplierDTO) {
+        boolean checkName = supplierRepository.existsByName(supplierDTO.getName());
+        if (checkName) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, supplierDTO.getName()));
+        }
+        boolean checkPhone = supplierRepository.existsByPhone(supplierDTO.getPhone());
+        if (checkPhone) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, supplierDTO.getPhone()));
+        }
+        boolean checkEmail = supplierRepository.existsByEmail(supplierDTO.getEmail());
+        if (checkEmail) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, supplierDTO.getEmail()));
+        }
         return convertEntityToDTO(supplierRepository.save(convertDTOToEntity(supplierDTO)));
     }
 
@@ -106,9 +119,27 @@ public class SupplierServiceImpl implements SupplierService, HelperService<Suppl
 
     @Override
     public Supplier updateFields(Supplier supplier, SupplierDTO supplierDTO) {
-        supplier.setName(supplierDTO.getName());
-        supplier.setEmail(supplierDTO.getName());
-        supplier.setPhone(supplierDTO.getPhone());
+        if (!supplierDTO.getName().equals(supplier.getName())) {
+            boolean checkName = supplierRepository.existsByName(supplierDTO.getName());
+            if (checkName) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, supplierDTO.getName()));
+            }
+            supplier.setName(supplierDTO.getName());
+        }
+        if (!supplierDTO.getEmail().equals(supplier.getEmail())) {
+            boolean checkEmail = supplierRepository.existsByEmail(supplierDTO.getEmail());
+            if (checkEmail) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, supplierDTO.getEmail()));
+            }
+            supplier.setEmail(supplierDTO.getName());
+        }
+        if (!supplierDTO.getPhone().equals(supplier.getPhone())) {
+            boolean checkPhone = supplierRepository.existsByPhone(supplierDTO.getPhone());
+            if (checkPhone) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, supplierDTO.getPhone()));
+            }
+            supplier.setPhone(supplierDTO.getPhone());
+        }
         return supplier;
     }
 

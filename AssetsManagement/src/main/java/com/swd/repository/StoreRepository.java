@@ -13,4 +13,10 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     Page<Store> findByAddressContaining(String searchValue, Pageable pageable);
 
     Page<Store> findByPhoneContaining(String searchValue, Pageable pageable);
+
+    boolean existsByName(String name);
+
+    boolean existsByAddress(String address);
+
+    boolean existsByPhone(String name);
 }

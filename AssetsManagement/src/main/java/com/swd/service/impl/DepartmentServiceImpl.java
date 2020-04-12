@@ -36,16 +36,16 @@ public class DepartmentServiceImpl implements DepartmentService, HelperService<D
     @Override
     public DepartmentDTO add(DepartmentDTO departmentDTO) {
         boolean checkName = departmentRepository.existsByName(departmentDTO.getName());
-        if (checkName){
-            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT,departmentDTO.getName()));
+        if (checkName) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, departmentDTO.getName()));
         }
         boolean checkPhone = departmentRepository.existsByPhone(departmentDTO.getPhone());
-        if (checkPhone){
-            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT,departmentDTO.getPhone()));
+        if (checkPhone) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, departmentDTO.getPhone()));
         }
         boolean checkEmail = departmentRepository.existsByEmail(departmentDTO.getEmail());
-        if (checkEmail){
-            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT,departmentDTO.getEmail()));
+        if (checkEmail) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, departmentDTO.getEmail()));
         }
         return convertEntityToDTO(departmentRepository.save(convertDTOToEntity(departmentDTO)));
     }
@@ -120,9 +120,27 @@ public class DepartmentServiceImpl implements DepartmentService, HelperService<D
 
     @Override
     public Department updateFields(Department department, DepartmentDTO departmentDTO) {
-        department.setName(departmentDTO.getName());
-        department.setEmail(departmentDTO.getName());
-        department.setPhone(departmentDTO.getPhone());
+        if (!departmentDTO.getName().equals(department.getName())) {
+            boolean checkName = departmentRepository.existsByName(departmentDTO.getName());
+            if (checkName) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, departmentDTO.getName()));
+            }
+            department.setName(departmentDTO.getName());
+        }
+        if (!departmentDTO.getEmail().equals(department.getEmail())) {
+            boolean checkEmail = departmentRepository.existsByEmail(departmentDTO.getEmail());
+            if (checkEmail) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, departmentDTO.getEmail()));
+            }
+            department.setEmail(departmentDTO.getName());
+        }
+        if (!departmentDTO.getPhone().equals(department.getPhone())) {
+            boolean checkPhone = departmentRepository.existsByPhone(departmentDTO.getPhone());
+            if (checkPhone) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, departmentDTO.getPhone()));
+            }
+            department.setPhone(departmentDTO.getPhone());
+        }
         return department;
     }
 

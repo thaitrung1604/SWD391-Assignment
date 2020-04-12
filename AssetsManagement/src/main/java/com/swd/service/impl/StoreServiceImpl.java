@@ -3,6 +3,7 @@ package com.swd.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
+import com.swd.exception.UniqueConstraintException;
 import com.swd.model.dto.StoreDTO;
 import com.swd.model.entity.Store;
 import com.swd.repository.StoreRepository;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Service
 public class StoreServiceImpl implements StoreService, HelperService<Store, StoreDTO> {
+    private static final String UNIQUE_CONSTRAINT = "%s is already taken";
     private final StoreRepository storeRepository;
     private final ObjectMapper objectMapper;
 
@@ -33,6 +35,18 @@ public class StoreServiceImpl implements StoreService, HelperService<Store, Stor
 
     @Override
     public StoreDTO add(StoreDTO storeDTO) {
+        boolean checkName = storeRepository.existsByName(storeDTO.getName());
+        if (checkName) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, storeDTO.getName()));
+        }
+        boolean checkAddress = storeRepository.existsByAddress(storeDTO.getAddress());
+        if (checkAddress) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, storeDTO.getAddress()));
+        }
+        boolean checkPhone = storeRepository.existsByPhone(storeDTO.getPhone());
+        if (checkPhone) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, storeDTO.getPhone()));
+        }
         return convertEntityToDTO(storeRepository.save(convertDTOToEntity(storeDTO)));
     }
 
@@ -106,9 +120,27 @@ public class StoreServiceImpl implements StoreService, HelperService<Store, Stor
 
     @Override
     public Store updateFields(Store store, StoreDTO storeDTO) {
-        store.setName(storeDTO.getName());
-        store.setAddress(storeDTO.getAddress());
-        store.setPhone(storeDTO.getPhone());
+        if (!storeDTO.getName().equals(store.getName())) {
+            boolean checkName = storeRepository.existsByName(storeDTO.getName());
+            if (checkName) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, storeDTO.getName()));
+            }
+            store.setName(storeDTO.getName());
+        }
+        if (!storeDTO.getAddress().equals(store.getAddress())) {
+            boolean checkAddress = storeRepository.existsByAddress(storeDTO.getAddress());
+            if (checkAddress) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, storeDTO.getAddress()));
+            }
+            store.setAddress(storeDTO.getAddress());
+        }
+        if (!storeDTO.getPhone().equals(store.getPhone())) {
+            boolean checkPhone = storeRepository.existsByPhone(storeDTO.getPhone());
+            if (checkPhone) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, storeDTO.getPhone()));
+            }
+            store.setPhone(storeDTO.getPhone());
+        }
         return store;
     }
 

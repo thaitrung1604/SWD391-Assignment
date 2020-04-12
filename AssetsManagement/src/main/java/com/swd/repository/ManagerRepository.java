@@ -22,4 +22,8 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     Optional<Manager> findByName(String name);
+
+    boolean existsByPhone(String phone);
+
+    boolean existsByEmail(String email);
 }

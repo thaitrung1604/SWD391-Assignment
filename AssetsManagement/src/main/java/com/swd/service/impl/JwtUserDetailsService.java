@@ -1,6 +1,7 @@
 package com.swd.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swd.exception.UniqueConstraintException;
 import com.swd.model.dto.ManagerDTO;
 import com.swd.model.entity.Account;
 import com.swd.model.entity.Manager;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+    private static final String UNIQUE_CONSTRAINT = "%s is already taken";
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
@@ -38,6 +40,18 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public ManagerDTO save(ManagerDTO managerDTO) {
+        boolean checkUsername = accountRepository.existsByUsername(managerDTO.getAccount().getUsername());
+        if (checkUsername) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getAccount().getUsername()));
+        }
+        boolean checkEmail = managerRepository.existsByEmail(managerDTO.getEmail());
+        if (checkEmail) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getEmail()));
+        }
+        boolean checkPhone = managerRepository.existsByPhone(managerDTO.getPhone());
+        if (checkPhone) {
+            throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getPhone()));
+        }
         Manager manager = objectMapper.convertValue(managerDTO, Manager.class);
         Account account = objectMapper.convertValue(managerDTO.getAccount(), Account.class);
         account.setPassword(passwordEncoder.encode(account.getPassword()));

@@ -3,10 +3,12 @@ package com.swd.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
+import com.swd.exception.UniqueConstraintException;
 import com.swd.model.dto.ManagerDTO;
 import com.swd.model.entity.Account;
 import com.swd.model.entity.Manager;
 import com.swd.model.entity.Store;
+import com.swd.repository.AccountRepository;
 import com.swd.repository.ManagerRepository;
 import com.swd.repository.StoreRepository;
 import com.swd.service.HelperService;
@@ -15,6 +17,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
@@ -26,13 +29,21 @@ import java.util.Optional;
 public class ManagerServiceImpl implements ManagerService, HelperService<Manager, ManagerDTO> {
     private static final String MANAGER_NOT_FOUND = "Can't find Manager with id: %s ";
     private static final String STORE_NOT_FOUND = "Can't find Store with id %s";
+    private static final String UNIQUE_CONSTRAINT = "%s is already taken";
     private final ManagerRepository managerRepository;
     private final StoreRepository storeRepository;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
     private final ObjectMapper objectMapper;
 
-    public ManagerServiceImpl(ManagerRepository managerRepository, StoreRepository storeRepository, ObjectMapper objectMapper) {
+    public ManagerServiceImpl(ManagerRepository managerRepository,
+                              StoreRepository storeRepository,
+                              AccountRepository accountRepository,
+                              PasswordEncoder passwordEncoder, ObjectMapper objectMapper) {
         this.managerRepository = managerRepository;
         this.storeRepository = storeRepository;
+        this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
         this.objectMapper = objectMapper;
     }
 
@@ -133,10 +144,28 @@ public class ManagerServiceImpl implements ManagerService, HelperService<Manager
 
     @Override
     public Manager updateFields(Manager manager, ManagerDTO managerDTO) {
+        if (!managerDTO.getAccount().getUsername().equals(manager.getAccount().getUsername())) {
+            boolean checkUsername = accountRepository.existsByUsername(managerDTO.getAccount().getUsername());
+            if (checkUsername) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getAccount().getUsername()));
+            }
+            manager.getAccount().setUsername(managerDTO.getAccount().getUsername());
+        }
+        if (!managerDTO.getEmail().equals(manager.getEmail())) {
+            boolean checkEmail = managerRepository.existsByEmail(managerDTO.getEmail());
+            if (checkEmail) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getEmail()));
+            }
+            manager.setEmail(managerDTO.getName());
+        }
+        if (!managerDTO.getPhone().equals(manager.getPhone())) {
+            boolean checkPhone = managerRepository.existsByPhone(managerDTO.getPhone());
+            if (checkPhone) {
+                throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getPhone()));
+            }
+            manager.setPhone(managerDTO.getPhone());
+        }
         manager.setName(managerDTO.getName());
-        manager.setEmail(managerDTO.getName());
-        manager.setPhone(managerDTO.getPhone());
-        manager.getStore().setId(managerDTO.getStore().getId());
         return manager;
     }
 
