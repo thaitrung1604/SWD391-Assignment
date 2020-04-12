@@ -210,6 +210,7 @@ public class AssetServiceImpl implements AssetService, HelperService<Asset, Asse
         asset.setName(assetDTO.getName());
         asset.setNextWarrantyDate(assetDTO.getNextWarrantyDate());
         asset.setPrice(assetDTO.getPrice());
+        asset.setPurchaseDate(assetDTO.getPurchaseDate());
         History history = new History();
         history.setAsset(asset);
         history.setDepartmentId(asset.getDepartment().getId());

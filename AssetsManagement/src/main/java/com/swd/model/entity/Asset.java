@@ -1,9 +1,12 @@
 package com.swd.model.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 public class Asset extends BaseEntity {
@@ -27,6 +30,8 @@ public class Asset extends BaseEntity {
     private MinuteOfHandover minuteOfHandover;
     @ManyToOne(fetch = FetchType.LAZY)
     private Manager manager;
+    @OneToMany(mappedBy = "asset")
+    private Set<History> history;
 
     public String getName() {
         return name;
@@ -130,5 +135,13 @@ public class Asset extends BaseEntity {
 
     public void setManager(Manager manager) {
         this.manager = manager;
+    }
+
+    public Set<History> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Set<History> history) {
+        this.history = history;
     }
 }

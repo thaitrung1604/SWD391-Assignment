@@ -156,7 +156,7 @@ public class ManagerServiceImpl implements ManagerService, HelperService<Manager
             if (checkEmail) {
                 throw new UniqueConstraintException(String.format(UNIQUE_CONSTRAINT, managerDTO.getEmail()));
             }
-            manager.setEmail(managerDTO.getName());
+            manager.setEmail(managerDTO.getEmail());
         }
         if (!managerDTO.getPhone().equals(manager.getPhone())) {
             boolean checkPhone = managerRepository.existsByPhone(managerDTO.getPhone());
@@ -166,6 +166,7 @@ public class ManagerServiceImpl implements ManagerService, HelperService<Manager
             manager.setPhone(managerDTO.getPhone());
         }
         manager.setName(managerDTO.getName());
+        manager.getAccount().setPassword(passwordEncoder.encode(managerDTO.getAccount().getPassword()));
         return manager;
     }
 

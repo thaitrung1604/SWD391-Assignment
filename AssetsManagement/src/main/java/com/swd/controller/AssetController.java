@@ -88,10 +88,4 @@ public class AssetController {
         }
         throw new NotSupportedException("System doesn't support update " + update);
     }
-
-    @DeleteMapping("/{assetId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAsset(@PathVariable(value = "assetId") long assetId) {
-        assetService.delete(assetId);
-    }
 }
