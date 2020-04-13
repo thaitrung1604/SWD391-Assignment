@@ -50,7 +50,7 @@ public class SpringConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().and()
+                .cors().configurationSource(corsConfigurationSource()).and()
                 .authorizeRequests().antMatchers("/api/v1/auth/*").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
