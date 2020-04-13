@@ -1,7 +1,0 @@
-
-S
-java:S1128	"6Remove this unused import 'com.swd.model.entity.Role'.(‚öðù8ø˜Ó˜—.
-±
-java:S1130Ý"’Remove the declaration of thrown exception 'org.springframework.security.core.userdetails.UsernameNotFoundException' which is a runtime exception.(žÌÃŸ8º¾™‹—.
-^
-java:S3655ã";Call "optionalUser.isPresent()" before accessing the value.(øú·Éýÿÿÿÿ8óïü˜—.
