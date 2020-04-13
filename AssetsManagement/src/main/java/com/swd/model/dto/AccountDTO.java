@@ -13,7 +13,7 @@ public class AccountDTO extends BaseDTO {
     private String password;
     private boolean isEnabled;
     @Valid
-    private UserDTO manager;
+    private UserDTO user;
 
     public String getUsername() {
         return username;
@@ -39,11 +39,11 @@ public class AccountDTO extends BaseDTO {
         isEnabled = enabled;
     }
 
-    public UserDTO getManager() {
-        return manager;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setManager(UserDTO manager) {
-        this.manager = manager;
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

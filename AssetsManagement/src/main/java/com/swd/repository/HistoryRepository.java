@@ -16,7 +16,7 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
 
     Page<History> findByStatusId(Long searchValue, Pageable pageable);
 
-    Page<History> findByManagerId(Long searchValue, Pageable pageable);
+    Page<History> findByUserId(Long searchValue, Pageable pageable);
 
     Page<History> findByDepartmentId(Long searchValue, Pageable pageable);
 
