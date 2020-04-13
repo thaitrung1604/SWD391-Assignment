@@ -6,9 +6,11 @@ import com.swd.exception.ResourceNotFoundException;
 import com.swd.exception.UniqueConstraintException;
 import com.swd.model.dto.UserDTO;
 import com.swd.model.entity.Account;
+import com.swd.model.entity.Role;
 import com.swd.model.entity.User;
 import com.swd.model.entity.Store;
 import com.swd.repository.AccountRepository;
+import com.swd.repository.RoleRepository;
 import com.swd.repository.UserRepository;
 import com.swd.repository.StoreRepository;
 import com.swd.service.HelperService;
@@ -18,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +44,8 @@ public class UserServiceImpl implements UserService, HelperService<User, UserDTO
     private StoreRepository storeRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -179,7 +185,6 @@ public class UserServiceImpl implements UserService, HelperService<User, UserDTO
         }
         user.setName(userDTO.getName());
         user.getAccount().setPassword(passwordEncoder.encode(userDTO.getAccount().getPassword()));
-        user.getAccount().setEnabled(userDTO.getAccount().isEnabled());
         return user;
     }
 
@@ -218,9 +223,11 @@ public class UserServiceImpl implements UserService, HelperService<User, UserDTO
         if (!optionalAccount.isPresent()) {
             throw new UsernameNotFoundException("Account not found with username: " + username);
         }
+        Optional<User> optionalUser = userRepository.findById(optionalAccount.get().getUser().getId());
+        User user = optionalUser.get();
         return new org.springframework.security.core.userdetails.User(
                 optionalAccount.get().getUsername(),
                 optionalAccount.get().getPassword(),
-                new ArrayList<>());
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName())));
     }
 }

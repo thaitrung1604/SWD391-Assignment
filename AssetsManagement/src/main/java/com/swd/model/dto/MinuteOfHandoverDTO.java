@@ -7,9 +7,9 @@ public class MinuteOfHandoverDTO extends BaseDTO {
     @NotNull
     private Long assetId;
     @NotNull
-    private Long previousManagerId;
+    private Long previousUserId;
     @NotNull
-    private Long currentManagerId;
+    private Long currentUserId;
     private Long previousStoreId;
     private Long currentStoreId;
     private Date date;
@@ -23,20 +23,20 @@ public class MinuteOfHandoverDTO extends BaseDTO {
         this.assetId = assetId;
     }
 
-    public Long getPreviousManagerId() {
-        return previousManagerId;
+    public Long getPreviousUserId() {
+        return previousUserId;
     }
 
-    public void setPreviousManagerId(Long previousManagerId) {
-        this.previousManagerId = previousManagerId;
+    public void setPreviousUserId(Long previousUserId) {
+        this.previousUserId = previousUserId;
     }
 
-    public Long getCurrentManagerId() {
-        return currentManagerId;
+    public Long getCurrentUserId() {
+        return currentUserId;
     }
 
-    public void setCurrentManagerId(Long currentManagerId) {
-        this.currentManagerId = currentManagerId;
+    public void setCurrentUserId(Long currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
     public Long getPreviousStoreId() {

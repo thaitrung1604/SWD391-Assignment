@@ -21,7 +21,7 @@ public class AssetDTO extends BaseDTO {
     private DepartmentDTO department;
     private SupplierDTO supplier;
     private StoreDTO store;
-    private UserDTO manager;
+    private UserDTO user;
 
     public String getName() {
         return name;
@@ -111,11 +111,11 @@ public class AssetDTO extends BaseDTO {
         this.store = store;
     }
 
-    public UserDTO getManager() {
-        return manager;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setManager(UserDTO manager) {
-        this.manager = manager;
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 }

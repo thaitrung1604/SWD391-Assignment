@@ -7,7 +7,7 @@ public class HistoryDTO {
     private Long statusId;
     private Long departmentId;
     private Long storeId;
-    private Long managerId;
+    private Long userId;
     private Date nextWarrantyDate;
     private Date expiryWarrantyDate;
     private Date date;
@@ -45,12 +45,12 @@ public class HistoryDTO {
         this.storeId = storeId;
     }
 
-    public Long getManagerId() {
-        return managerId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Date getNextWarrantyDate() {

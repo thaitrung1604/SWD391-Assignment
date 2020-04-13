@@ -61,7 +61,7 @@ public class HistoryServiceImpl implements HistoryService {
             case "status_id":
                 historyPage = historyRepository.findByStatusId(Long.parseLong(searchValue), pageable);
                 break;
-            case "manager_id":
+            case "user_id":
                 historyPage = historyRepository.findByUserId(Long.parseLong(searchValue), pageable);
                 break;
             case "department_id":

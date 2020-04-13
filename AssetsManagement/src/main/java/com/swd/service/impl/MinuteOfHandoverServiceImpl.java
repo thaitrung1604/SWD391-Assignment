@@ -21,8 +21,8 @@ import java.util.Optional;
 @Service
 public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
     private static final String ASSET_NOT_FOUND = "Can't find asset with id %s";
-    private static final String MANAGER_NOT_FOUND = "Can't find manager with id %s";
-    private static final String STORE_NOT_FOUND = "Manager with id %s doesn't have a store. Please assign him/her first";
+    private static final String MANAGER_NOT_FOUND = "Can't find user with id %s";
+    private static final String STORE_NOT_FOUND = "User with id %s doesn't have a store. Please assign him/her first";
     private static final String MINUTE_OF_HANDOVER_NOT_FOUND = "Minute of handover with id %s not found";
     private final MinuteOfHandoverRepository minuteOfHandoverRepository;
     private final UserRepository userRepository;
@@ -45,22 +45,22 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
         if (!optionalAsset.isPresent()) {
             throw new ResourceNotFoundException(String.format(ASSET_NOT_FOUND, dto.getAssetId()));
         }
-        Optional<User> optionalPreviousManager = userRepository.findById(dto.getPreviousManagerId());
-        if (!optionalPreviousManager.isPresent()) {
-            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getPreviousManagerId()));
+        Optional<User> optionalPreviousUser = userRepository.findById(dto.getPreviousUserId());
+        if (!optionalPreviousUser.isPresent()) {
+            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getPreviousUserId()));
         }
-        Optional<User> optionalCurrentManager = userRepository.findById(dto.getCurrentManagerId());
-        if (!optionalCurrentManager.isPresent()) {
-            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getCurrentManagerId()));
+        Optional<User> optionalCurrentUser = userRepository.findById(dto.getCurrentUserId());
+        if (!optionalCurrentUser.isPresent()) {
+            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getCurrentUserId()));
         }
         MinuteOfHandover minuteOfHandover = new MinuteOfHandover();
-        User currentUser = optionalCurrentManager.get();
+        User currentUser = optionalCurrentUser.get();
         if (currentUser.getStore() == null) {
             throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, currentUser.getId()));
         }
-        User previousUser = optionalPreviousManager.get();
+        User previousUser = optionalPreviousUser.get();
         if (previousUser.getStore() == null) {
-            throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, currentUser.getId()));
+            throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, previousUser.getId()));
         }
         return convertEntityToDTO(optionalAsset.get(), currentUser, previousUser, minuteOfHandover, dto);
     }
@@ -85,10 +85,10 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
     public Page<MinuteOfHandoverDTO> findAllWithSearch(Pageable pageable, String searchBy, String searchValue) {
         Page<MinuteOfHandover> minuteOfHandoverPage;
         switch (searchBy) {
-            case "current_manager_id":
+            case "current_user_id":
                 minuteOfHandoverPage = minuteOfHandoverRepository.findByCurrentUserIdContaining(searchValue, pageable);
                 break;
-            case "previous_manager_id":
+            case "previous_user_id":
                 minuteOfHandoverPage = minuteOfHandoverRepository.findByPreviousUserIdContaining(searchValue, pageable);
                 break;
             case "asset_id":
@@ -119,20 +119,20 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
         if (!optionalAsset.isPresent()) {
             throw new ResourceNotFoundException(String.format(ASSET_NOT_FOUND, dto.getAssetId()));
         }
-        Optional<User> optionalPreviousManager = userRepository.findById(dto.getPreviousManagerId());
-        if (!optionalPreviousManager.isPresent()) {
-            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getPreviousManagerId()));
+        Optional<User> optionalPreviousUser = userRepository.findById(dto.getPreviousUserId());
+        if (!optionalPreviousUser.isPresent()) {
+            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getPreviousUserId()));
         }
-        Optional<User> optionalCurrentManager = userRepository.findById(dto.getCurrentManagerId());
-        if (!optionalCurrentManager.isPresent()) {
-            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getCurrentManagerId()));
+        Optional<User> optionalCurrentUser = userRepository.findById(dto.getCurrentUserId());
+        if (!optionalCurrentUser.isPresent()) {
+            throw new ResourceNotFoundException(String.format(MANAGER_NOT_FOUND, dto.getCurrentUserId()));
         }
         MinuteOfHandover minuteOfHandover = optionalMinuteOfHandover.get();
-        User currentUser = optionalCurrentManager.get();
+        User currentUser = optionalCurrentUser.get();
         if (currentUser.getStore() == null) {
             throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, currentUser.getId()));
         }
-        User previousUser = optionalPreviousManager.get();
+        User previousUser = optionalPreviousUser.get();
         if (previousUser.getStore() == null) {
             throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, previousUser.getId()));
         }
@@ -152,9 +152,9 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
     private MinuteOfHandoverDTO convertEntityToDTO(MinuteOfHandover minuteOfHandover) {
         MinuteOfHandoverDTO minuteOfHandoverDTO = new MinuteOfHandoverDTO();
         minuteOfHandoverDTO.setAssetId(minuteOfHandover.getAsset().getId());
-        minuteOfHandoverDTO.setCurrentManagerId(minuteOfHandover.getCurrentUser().getId());
+        minuteOfHandoverDTO.setCurrentUserId(minuteOfHandover.getCurrentUser().getId());
         minuteOfHandoverDTO.setCurrentStoreId(minuteOfHandover.getCurrentUser().getStore().getId());
-        minuteOfHandoverDTO.setPreviousManagerId(minuteOfHandover.getPreviousUser().getId());
+        minuteOfHandoverDTO.setPreviousUserId(minuteOfHandover.getPreviousUser().getId());
         minuteOfHandoverDTO.setPreviousStoreId(minuteOfHandover.getPreviousUser().getStore().getId());
         minuteOfHandoverDTO.setDate(minuteOfHandover.getDate());
         minuteOfHandoverDTO.setCreateBy(minuteOfHandover.getCreateBy());
@@ -173,7 +173,7 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
         History history = new History();
         history.setAsset(asset);
         history.setDepartmentId(asset.getDepartment().getId());
-        history.setManagerId(asset.getUser().getId());
+        history.setUserId(asset.getUser().getId());
         history.setStatusId(asset.getStatus().getId());
         history.setStoreId(asset.getStore().getId());
         history.setExpiryWarrantyDate(asset.getExpiryWarrantyDate());
@@ -186,7 +186,7 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
         minuteOfHandoverRepository.save(minuteOfHandover);
 
         minuteOfHandoverDTO.setPreviousStoreId(previousUser.getStore().getId());
-        minuteOfHandoverDTO.setCurrentManagerId(previousUser.getStore().getId());
+        minuteOfHandoverDTO.setCurrentUserId(previousUser.getStore().getId());
         minuteOfHandoverDTO.setDate(minuteOfHandover.getDate());
         minuteOfHandoverDTO.setCreateBy(minuteOfHandover.getCreateBy());
         return minuteOfHandoverDTO;
