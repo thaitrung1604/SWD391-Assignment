@@ -134,7 +134,7 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
         }
         Manager previousManager = optionalPreviousManager.get();
         if (previousManager.getStore() == null) {
-            throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, currentManager.getId()));
+            throw new ResourceNotFoundException(String.format(STORE_NOT_FOUND, previousManager.getId()));
         }
         return convertEntityToDTO(optionalAsset.get(), currentManager, previousManager, minuteOfHandover, dto);
     }
