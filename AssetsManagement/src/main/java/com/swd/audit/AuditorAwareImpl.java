@@ -1,7 +1,7 @@
 package com.swd.audit;
 
-import com.swd.model.entity.Manager;
-import com.swd.repository.ManagerRepository;
+import com.swd.model.entity.User;
+import com.swd.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Component
 public class AuditorAwareImpl implements AuditorAware<Long> {
     @Autowired
-    private ManagerRepository managerRepository;
+    private UserRepository userRepository;
 
     @Override
     public Optional<Long> getCurrentAuditor() {
@@ -21,7 +21,7 @@ public class AuditorAwareImpl implements AuditorAware<Long> {
         if (authentication == null || !authentication.isAuthenticated()) {
             return Optional.empty();
         }
-        Optional<Manager> optionalManager = managerRepository.findByName((String) authentication.getPrincipal());
+        Optional<User> optionalManager = userRepository.findByName((String) authentication.getPrincipal());
         Long result = null;
         if (optionalManager.isPresent()) {
             result = optionalManager.get().getId();

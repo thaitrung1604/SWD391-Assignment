@@ -54,7 +54,7 @@ public class AssetServiceImpl implements AssetService, HelperService<Asset, Asse
         History history = new History();
         history.setAsset(returnAsset);
         history.setDepartmentId(returnAsset.getDepartment().getId());
-        history.setManagerId(returnAsset.getManager().getId());
+        history.setManagerId(returnAsset.getUser().getId());
         history.setStatusId(returnAsset.getStatus().getId());
         history.setStoreId(returnAsset.getStore().getId());
         history.setExpiryWarrantyDate(returnAsset.getExpiryWarrantyDate());
@@ -111,7 +111,7 @@ public class AssetServiceImpl implements AssetService, HelperService<Asset, Asse
                 assetPage = assetRepository.findByDepartmentIdContaining(searchValue, pageable);
                 break;
             case "manager_id":
-                assetPage = assetRepository.findByManagerIdContaining(searchValue, pageable);
+                assetPage = assetRepository.findByUserIdContaining(searchValue, pageable);
                 break;
             case "status_id":
                 assetPage = assetRepository.findByStatusIdContaining(searchValue, pageable);
@@ -150,7 +150,7 @@ public class AssetServiceImpl implements AssetService, HelperService<Asset, Asse
             History history = new History();
             history.setAsset(returnAsset);
             history.setDepartmentId(returnAsset.getDepartment().getId());
-            history.setManagerId(returnAsset.getManager().getId());
+            history.setManagerId(returnAsset.getUser().getId());
             history.setStatusId(returnAsset.getStatus().getId());
             history.setStoreId(returnAsset.getStore().getId());
             history.setExpiryWarrantyDate(returnAsset.getExpiryWarrantyDate());
@@ -174,7 +174,7 @@ public class AssetServiceImpl implements AssetService, HelperService<Asset, Asse
             History history = new History();
             history.setAsset(returnAsset);
             history.setDepartmentId(returnAsset.getDepartment().getId());
-            history.setManagerId(returnAsset.getManager().getId());
+            history.setManagerId(returnAsset.getUser().getId());
             history.setStatusId(returnAsset.getStatus().getId());
             history.setStoreId(returnAsset.getStore().getId());
             history.setExpiryWarrantyDate(returnAsset.getExpiryWarrantyDate());
@@ -214,7 +214,7 @@ public class AssetServiceImpl implements AssetService, HelperService<Asset, Asse
         History history = new History();
         history.setAsset(asset);
         history.setDepartmentId(asset.getDepartment().getId());
-        history.setManagerId(asset.getManager().getId());
+        history.setManagerId(asset.getUser().getId());
         history.setStatusId(asset.getStatus().getId());
         history.setStoreId(asset.getStore().getId());
         history.setExpiryWarrantyDate(asset.getExpiryWarrantyDate());

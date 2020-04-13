@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MinuteOfHandoverRepository extends JpaRepository<MinuteOfHandover, Long> {
-    Page<MinuteOfHandover> findByCurrentManagerIdContaining(String searchValue, Pageable pageable);
+    Page<MinuteOfHandover> findByCurrentUserIdContaining(String searchValue, Pageable pageable);
 
-    Page<MinuteOfHandover> findByPreviousManagerIdContaining(String searchValue, Pageable pageable);
+    Page<MinuteOfHandover> findByPreviousUserIdContaining(String searchValue, Pageable pageable);
 
     Page<MinuteOfHandover> findByAssetIdContaining(String searchValue, Pageable pageable);
 

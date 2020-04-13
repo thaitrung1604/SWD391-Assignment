@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/departments")
+@RequestMapping("/api/v1")
 public class DepartmentController {
     private final DepartmentService departmentService;
 
@@ -31,19 +31,19 @@ public class DepartmentController {
         this.departmentService = departmentService;
     }
 
-    @PostMapping
+    @PostMapping("/admin/departments")
     @ResponseStatus(HttpStatus.CREATED)
     public DepartmentDTO addDepartment(@Valid @RequestBody DepartmentDTO departmentDTO) {
         return departmentService.add(departmentDTO);
     }
 
-    @GetMapping("/{departmentId}")
+    @GetMapping("/departments/{departmentId}")
     public DepartmentDTO findDepartment(@PathVariable(value = "departmentId") long departmentId,
                                         @RequestParam(required = false) List<String> fields) {
         return departmentService.find(departmentId, fields);
     }
 
-    @GetMapping
+    @GetMapping("/departments")
     public Page<DepartmentDTO> findDepartments(@RequestParam(required = false, defaultValue = "0") int page,
                                                @RequestParam(required = false, defaultValue = "10") int size,
                                                @RequestParam(required = false) List<String> fields,
@@ -69,13 +69,13 @@ public class DepartmentController {
         return departmentService.findAll(pageable, fields);
     }
 
-    @PutMapping("/{departmentId}")
+    @PutMapping("/admin/departments/{departmentId}")
     public DepartmentDTO updateDepartment(@PathVariable(value = "departmentId") long departmentId,
                                           @Valid @RequestBody DepartmentDTO departmentDTO) {
         return departmentService.update(departmentId, departmentDTO);
     }
 
-    @DeleteMapping("/{departmentId}")
+    @DeleteMapping("/admin/departments/{departmentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDepartment(@PathVariable(value = "departmentId") long departmentId) {
         departmentService.delete(departmentId);

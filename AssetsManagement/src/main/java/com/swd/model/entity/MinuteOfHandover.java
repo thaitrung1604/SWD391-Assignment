@@ -9,9 +9,9 @@ public class MinuteOfHandover extends AuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Asset asset;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Manager previousManager;
+    private User previousUser;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Manager currentManager;
+    private User currentUser;
 
     public Asset getAsset() {
         return asset;
@@ -21,19 +21,19 @@ public class MinuteOfHandover extends AuditEntity {
         this.asset = asset;
     }
 
-    public Manager getPreviousManager() {
-        return previousManager;
+    public User getPreviousUser() {
+        return previousUser;
     }
 
-    public void setPreviousManager(Manager previousManager) {
-        this.previousManager = previousManager;
+    public void setPreviousUser(User previousUser) {
+        this.previousUser = previousUser;
     }
 
-    public Manager getCurrentManager() {
-        return currentManager;
+    public User getCurrentUser() {
+        return currentUser;
     }
 
-    public void setCurrentManager(Manager currentManager) {
-        this.currentManager = currentManager;
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 }

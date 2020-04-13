@@ -16,9 +16,9 @@ public class Account extends BaseEntity implements Serializable {
     private String password;
     private boolean isEnabled;
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "manager_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
-    private Manager manager;
+    private User user;
 
     public String getUsername() {
         return username;
@@ -44,11 +44,11 @@ public class Account extends BaseEntity implements Serializable {
         isEnabled = enabled;
     }
 
-    public Manager getManager() {
-        return manager;
+    public User getUser() {
+        return user;
     }
 
-    public void setManager(Manager manager) {
-        this.manager = manager;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

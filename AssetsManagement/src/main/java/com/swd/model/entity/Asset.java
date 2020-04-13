@@ -24,7 +24,7 @@ public class Asset extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Store store;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Manager manager;
+    private User user;
 
     public String getName() {
         return name;
@@ -114,11 +114,11 @@ public class Asset extends BaseEntity {
         this.store = store;
     }
 
-    public Manager getManager() {
-        return manager;
+    public User getUser() {
+        return user;
     }
 
-    public void setManager(Manager manager) {
-        this.manager = manager;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

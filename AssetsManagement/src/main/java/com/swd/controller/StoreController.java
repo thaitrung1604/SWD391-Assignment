@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/stores")
+@RequestMapping("/api/v1")
 public class StoreController {
     private final StoreService storeService;
 
@@ -31,19 +31,19 @@ public class StoreController {
         this.storeService = storeService;
     }
 
-    @PostMapping
+    @PostMapping("/admin/stores")
     @ResponseStatus(HttpStatus.CREATED)
     public StoreDTO addStore(@Valid @RequestBody StoreDTO storeDTO) {
         return storeService.add(storeDTO);
     }
 
-    @GetMapping("/{storeId}")
+    @GetMapping("/stores/{storeId}")
     public StoreDTO findStore(@PathVariable(value = "storeId") long storeId,
                               @RequestParam(required = false) List<String> fields) {
         return storeService.find(storeId, fields);
     }
 
-    @GetMapping
+    @GetMapping("/stores")
     public Page<StoreDTO> findStores(@RequestParam(required = false, defaultValue = "0") int page,
                                      @RequestParam(required = false, defaultValue = "10") int size,
                                      @RequestParam(required = false) List<String> fields,
@@ -69,13 +69,13 @@ public class StoreController {
         return storeService.findAll(pageable, fields);
     }
 
-    @PutMapping("/{storeId}")
+    @PutMapping("/admin/stores/{storeId}")
     public StoreDTO updateStore(@PathVariable(value = "storeId") long storeId,
                                 @Valid @RequestBody StoreDTO storeDTO) {
         return storeService.update(storeId, storeDTO);
     }
 
-    @DeleteMapping("/{storeId}")
+    @DeleteMapping("/admin/stores/{storeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStore(@PathVariable(value = "storeId") long storeId) {
         storeService.delete(storeId);

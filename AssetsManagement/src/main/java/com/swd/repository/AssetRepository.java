@@ -20,7 +20,7 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
 
     Page<Asset> findByDepartmentIdContaining(String searchValue, Pageable pageable);
 
-    Page<Asset> findByManagerIdContaining(String searchValue, Pageable pageable);
+    Page<Asset> findByUserIdContaining(String searchValue, Pageable pageable);
 
     Page<Asset> findByStatusIdContaining(String searchValue, Pageable pageable);
 

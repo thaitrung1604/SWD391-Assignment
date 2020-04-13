@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/suppliers")
+@RequestMapping("/api/v1")
 public class SupplierController {
     private final SupplierService supplierService;
 
@@ -31,19 +31,19 @@ public class SupplierController {
         this.supplierService = supplierService;
     }
 
-    @PostMapping
+    @PostMapping("/admin/suppliers")
     @ResponseStatus(HttpStatus.CREATED)
     public SupplierDTO addSupplier(@Valid @RequestBody SupplierDTO supplierDTO) {
         return supplierService.add(supplierDTO);
     }
 
-    @GetMapping("/{supplierId}")
+    @GetMapping("/suppliers/{supplierId}")
     public SupplierDTO findSupplier(@PathVariable(value = "supplierId") long supplierId,
                                     @RequestParam(required = false) List<String> fields) {
         return supplierService.find(supplierId, fields);
     }
 
-    @GetMapping
+    @GetMapping("/suppliers")
     public Page<SupplierDTO> findSuppliers(@RequestParam(required = false, defaultValue = "0") int page,
                                            @RequestParam(required = false, defaultValue = "10") int size,
                                            @RequestParam(required = false) List<String> fields,
@@ -69,13 +69,13 @@ public class SupplierController {
         return supplierService.findAll(pageable, fields);
     }
 
-    @PutMapping("/{supplierId}")
+    @PutMapping("/admin/suppliers/{supplierId}")
     public SupplierDTO updateSupplier(@PathVariable(value = "supplierId") long supplierId,
                                       @Valid @RequestBody SupplierDTO supplierDTO) {
         return supplierService.update(supplierId, supplierDTO);
     }
 
-    @DeleteMapping("/{supplierId}")
+    @DeleteMapping("/admin/suppliers/{supplierId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSupplier(@PathVariable(value = "supplierId") long supplierId) {
         supplierService.delete(supplierId);
