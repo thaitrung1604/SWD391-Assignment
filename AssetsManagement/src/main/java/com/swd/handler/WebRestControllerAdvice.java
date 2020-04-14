@@ -1,5 +1,6 @@
 package com.swd.handler;
 
+import com.swd.exception.InvalidException;
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
 import com.swd.exception.UniqueConstraintException;
@@ -70,6 +71,11 @@ public class WebRestControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ParseException.class)
     public ResponseEntity<Object> handleParseException(ParseException ex) {
+        return createResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidException.class)
+    public ResponseEntity<Object> handleInvalidException(InvalidException ex) {
         return createResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

@@ -1,5 +1,6 @@
 package com.swd.service.impl;
 
+import com.swd.exception.InvalidException;
 import com.swd.exception.NotSupportedException;
 import com.swd.exception.ResourceNotFoundException;
 import com.swd.model.dto.MinuteOfHandoverDTO;
@@ -24,6 +25,7 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
     private static final String MANAGER_NOT_FOUND = "Can't find user with id %s";
     private static final String STORE_NOT_FOUND = "User with id %s doesn't have a store. Please assign him/her first";
     private static final String MINUTE_OF_HANDOVER_NOT_FOUND = "Minute of handover with id %s not found";
+    private static final String DUPLICATE_USER_ID = "Current User Id and Previous User Id must be different";
     private final MinuteOfHandoverRepository minuteOfHandoverRepository;
     private final UserRepository userRepository;
     private final AssetRepository assetRepository;
@@ -41,6 +43,9 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
 
     @Override
     public MinuteOfHandoverDTO add(MinuteOfHandoverDTO dto) {
+        if (dto.getCurrentUserId().equals(dto.getPreviousUserId())) {
+            throw new InvalidException(DUPLICATE_USER_ID);
+        }
         Optional<Asset> optionalAsset = assetRepository.findById(dto.getAssetId());
         if (!optionalAsset.isPresent()) {
             throw new ResourceNotFoundException(String.format(ASSET_NOT_FOUND, dto.getAssetId()));
@@ -151,6 +156,7 @@ public class MinuteOfHandoverServiceImpl implements MinuteOfHandoverService {
 
     private MinuteOfHandoverDTO convertEntityToDTO(MinuteOfHandover minuteOfHandover) {
         MinuteOfHandoverDTO minuteOfHandoverDTO = new MinuteOfHandoverDTO();
+        minuteOfHandoverDTO.setId(minuteOfHandover.getId());
         minuteOfHandoverDTO.setAssetId(minuteOfHandover.getAsset().getId());
         minuteOfHandoverDTO.setCurrentUserId(minuteOfHandover.getCurrentUser().getId());
         minuteOfHandoverDTO.setCurrentStoreId(minuteOfHandover.getCurrentUser().getStore().getId());
